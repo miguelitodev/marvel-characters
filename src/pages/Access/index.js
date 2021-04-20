@@ -14,8 +14,18 @@ const Access = () => {
             <Card>
                 <Title>Dados de acesso</Title>
                 <ContentInputs>
-                    <InputPublicKey />
-                    <InputPrivateKey />
+                    <InputPublicKey
+                        placeholder="Public key"
+                        id="public-key"
+                        name="public-key"
+                        type="text"
+                    />
+                    <InputPrivateKey
+                        placeholder="Private key"
+                        id="private-key"
+                        name="private-key"
+                        type="text"
+                    />
                 </ContentInputs>
                 <ButtonAccess>Acessar</ButtonAccess>
             </Card>
