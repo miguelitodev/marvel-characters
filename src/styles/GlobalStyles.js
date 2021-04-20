@@ -33,5 +33,6 @@ export default createGlobalStyle`
         --text: #333;
         --span: #ccc;
         --green-accepted: #15b015;
+        --card: #eee;
     }
 `;
