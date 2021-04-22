@@ -1,3 +1,7 @@
+import React from "react";
+
+import store from "./../../store/store";
+
 import {
     Header,
     Title,
@@ -21,6 +25,8 @@ import {
 import Container from "./../../components/Container";
 
 export default function Character() {
+    React.useEffect(() => console.log(store.getState()));
+
     return (
         <Container>
             <Header>
