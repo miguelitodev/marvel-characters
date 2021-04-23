@@ -1,3 +1,4 @@
+import { useState, useEffect } from "react";
 import Container from "../../components/Container";
 
 import {
@@ -18,41 +19,72 @@ import {
     LinkPage,
 } from "./styles";
 
+import { request } from "./../../store/Requester/Resquester.actions";
+import { useDispatch, useSelector } from "react-redux";
+import { save } from "../../store/PreserverKeys/PreserverKeys.actions";
+
+import format from "date-fns/format";
+
 export default function Characters() {
+    const [dataCharacters, setDataCharacters] = useState([]);
+
+    const dispatch = useDispatch();
+
+    useEffect(() => {
+        requestCharacters();
+    }, []);
+
+    const keys = useSelector((state) => state.preserverKeys);
+
+    async function requestCharacters() {
+        try {
+            const response = await request(
+                "/v1/public/characters",
+                keys.publicKey,
+                keys.privateKey
+            );
+            setDataCharacters(response.data.data.results);
+        } catch (error) {
+            dispatch(save("", "", false));
+            console.log(error);
+        }
+    }
+
     return (
         <Container>
             <Header>
                 <Title>Characters</Title>
             </Header>
+
             <Main>
                 <CardCharacter>
-                    <NameCharacterTitle>Nome personagem</NameCharacterTitle>
+                    <NameCharacterTitle>Name</NameCharacterTitle>
                     <DescriptionCharacterTitle>
-                        Descrição personagem
+                        Character Description
                     </DescriptionCharacterTitle>
-                    <LastUpdateTitle>Última atualização</LastUpdateTitle>
-                    <SeeMoreTitle>Ver Mais</SeeMoreTitle>
+                    <LastUpdateTitle>Last Update</LastUpdateTitle>
+                    <SeeMoreTitle>See more</SeeMoreTitle>
                 </CardCharacter>
-                <CardCharacter>
-                    <NameCharacter>Nome personagem</NameCharacter>
-                    <DescriptionCharacter>
-                        It is a long established fact that a reader will be
-                        distracted by the readable content of a page when
-                        looking at its layout. The point of using Lorem Ipsum is
-                        that it has a more-or-less normal distribution of
-                        letters, as opposed to using 'Content here, content
-                        here', making it look like readable English. Many
-                        desktop publishing packages and web page editors now use
-                        Lorem Ipsum as their default model text, and a search
-                        for 'lorem ipsum' will uncover many web sites still in
-                        their infancy. Various versions have evolved over the
-                        years, sometimes by accident, sometimes on purpose
-                        (injected humour and the like).
-                    </DescriptionCharacter>
-                    <LastUpdate>Última atualização</LastUpdate>
-                    <SeeMore>Ver mais</SeeMore>
-                </CardCharacter>
+
+                {dataCharacters.map((character) => (
+                    <CardCharacter key={character.id}>
+                        <NameCharacter>{character.name}</NameCharacter>
+                        <DescriptionCharacter>
+                            {character.description !== ""
+                                ? character.description
+                                : "Whithout Description"}
+                        </DescriptionCharacter>
+                        <LastUpdate>
+                            {format(
+                                Date.parse(character.modified),
+                                "EEEE, d MMMM yyyy"
+                            )}
+                        </LastUpdate>
+                        <SeeMore>See more</SeeMore>
+                    </CardCharacter>
+                ))}
             </Main>
+
             <Footer>
                 <ContainerPages>
                     <LinkPage>&laquo;</LinkPage>

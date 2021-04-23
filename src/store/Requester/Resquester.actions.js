@@ -2,9 +2,9 @@ import api from "./../../services/api";
 const md5 = require("md5");
 const date = new Date();
 
-export function verify(publicKey, privateKey) {
+export function request(path, publicKey, privateKey) {
     return api({
-        url: "/v1/public/comics",
+        url: path,
         type: "GET",
         params: {
             apikey: publicKey,
