@@ -29,12 +29,11 @@ const Access = () => {
             const response = await verify(publicKey, privateKey);
             if (response.status === 200) {
                 dispatch(save(publicKey, privateKey, true));
-                console.log(result);
+                setMessage("Sucesso, você será redirecionado.");
                 return true;
             }
         } catch (error) {
             dispatch(save("", "", false));
-            console.log(result);
             setMessage(
                 "Keys invalidas ou um problema interno, tente novamente."
             );
