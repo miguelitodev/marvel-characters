@@ -1,5 +1,11 @@
-import React from "react";
+import { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 
+import { useParams, Link } from "react-router-dom";
+import { save } from "../../store/PreserverKeys/PreserverKeys.actions";
+import { request } from "../../store/Requester/Resquester.actions";
+
+import Container from "./../../components/Container";
 import {
     Header,
     Title,
@@ -20,95 +26,94 @@ import {
     DescriptionComics,
 } from "./styles";
 
-import Container from "./../../components/Container";
-
 export default function Character() {
+    const [dataCharacter, setDataCharacter] = useState([]);
+    const [dataCharacterComics, setDataCharacterComics] = useState([]);
+    const { id } = useParams();
+
+    useEffect(() => console.log(id), []);
+
+    const dispatch = useDispatch();
+
+    useEffect(() => {
+        requestCharacter();
+        requestCharacterComics();
+    }, []);
+
+    const keys = useSelector((state) => state.preserverKeys);
+
+    async function requestCharacter() {
+        try {
+            const response = await request(
+                `/v1/public/characters/${id}`,
+                keys.publicKey,
+                keys.privateKey
+            );
+            setDataCharacter(response.data.data.results[0]);
+        } catch (error) {
+            dispatch(save("", "", false));
+            console.log(error);
+        }
+    }
+
+    async function requestCharacterComics() {
+        try {
+            const response = await request(
+                `/v1/public/characters/${id}/comics`,
+                keys.publicKey,
+                keys.privateKey
+            );
+            console.log(response.data.data.results);
+            setDataCharacterComics(response.data.data.results);
+        } catch (error) {
+            dispatch(save("", "", false));
+            console.log(error);
+        }
+    }
+
     return (
         <Container>
             <Header>
-                <Title>Abomination (Emil Blonsky)</Title>
-                <GoBack>voltar</GoBack>
+                <Title>{dataCharacter.name}</Title>
+                <Link to="/characters">
+                    <GoBack>voltar</GoBack>
+                </Link>
             </Header>
             <Main>
                 <MainContent>
                     <ImageCharacter
-                        src="http://i.annihil.us/u/prod/marvel/i/mg/9/50/4ce18691cbf04.jpg"
+                        src={`${dataCharacter.thumbnail?.path}.${dataCharacter.thumbnail?.extension}`}
                         alt="personagem"
                     />
                     <ContentCharacter>
-                        <NameCharacter>
-                            Abomination (Emil Blonsky)
-                        </NameCharacter>
+                        <NameCharacter>{dataCharacter.name}</NameCharacter>
                         <DescriptionCharacter>
-                            Formerly known as Emil Blonsky, a spy of Soviet
-                            Yugoslavian origin working for the KGB, the
-                            Abomination gained his powers after receiving a dose
-                            of gamma radiation similar to that which transformed
-                            Bruce Banner into the incredible Hulk.
+                            {dataCharacter.description !== ""
+                                ? dataCharacter.description
+                                : "Whithout Description"}
                         </DescriptionCharacter>
                     </ContentCharacter>
                 </MainContent>
                 <ListComics>
-                    <TitleStage>Fascículos</TitleStage>
+                    <TitleStage>Comics</TitleStage>
                     <ContentComics>
-                        <Comics>
-                            <ImageComics
-                                src="http://i.annihil.us/u/prod/marvel/i/mg/2/e0/586bcdf9c3ecd.jpg"
-                                alt="comic"
-                            />
-                            <TextComics>
-                                <TitleComics>Avengers (1998) #61</TitleComics>
-                                <DescriptionComics>
-                                    A temporada de classificação de 2021 está
-                                    finalmente aqui depois de alguns meses
-                                    brincando com os itens novos e brilhantes da
-                                    pré-temporada. Quer você tenha ficado
-                                    desapontado com a classificação da última
-                                    temporada, queira subir mais alto do que
-                                    nunca, ou se você for completamente novo no
-                                    jogo, o grind de classificação começou.
-                                    Então, se você quiser aumentar seu pool de
-                                    campeões para ter certeza de que está
-                                    pronto, aqui estão nossas melhores escolhas
-                                    para ajudá-lo a escalar em cada função!
-                                    jogo, o grind de classificação começou.
-                                    Então, se você quiser aumentar seu pool de
-                                    campeões para ter certeza de que está
-                                    pronto, aqui estão nossas melhores escolhas
-                                    para ajudá-lo a escalar em cada função!
-                                </DescriptionComics>
-                            </TextComics>
-                        </Comics>
-                        <Comics>
-                            <ImageComics
-                                src="http://i.annihil.us/u/prod/marvel/i/mg/2/e0/586bcdf9c3ecd.jpg"
-                                alt="comic"
-                            />
-                            <TextComics>
-                                <TitleComics>Avengers (1998) #61</TitleComics>
-                                <DescriptionComics>
-                                    The team gains new international status, but
-                                    will everyone accept it? Avengers come and
-                                    go as the new lineup is established and new
-                                    threats await!
-                                </DescriptionComics>
-                            </TextComics>
-                        </Comics>
-                        <Comics>
-                            <ImageComics
-                                src="http://i.annihil.us/u/prod/marvel/i/mg/2/e0/586bcdf9c3ecd.jpg"
-                                alt="comic"
-                            />
-                            <TextComics>
-                                <TitleComics>Avengers (1998) #61</TitleComics>
-                                <DescriptionComics>
-                                    The team gains new international status, but
-                                    will everyone accept it? Avengers come and
-                                    go as the new lineup is established and new
-                                    threats await!
-                                </DescriptionComics>
-                            </TextComics>
-                        </Comics>
+                        {dataCharacterComics.map((comic) => (
+                            <Comics>
+                                <ImageComics
+                                    src={`${comic.thumbnail?.path}.${comic.thumbnail?.extension}`}
+                                    alt="Comic Thumbnail"
+                                    loading="lazy"
+                                />
+                                <TextComics>
+                                    <TitleComics>{comic.title}</TitleComics>
+                                    <DescriptionComics>
+                                        {comic.description !== null
+                                            ? comic.description
+                                            : "Whithout Description"}
+                                    </DescriptionComics>
+                                </TextComics>
+                            </Comics>
+                        ))}
                     </ContentComics>
                 </ListComics>
             </Main>

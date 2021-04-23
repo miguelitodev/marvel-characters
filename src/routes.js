@@ -19,11 +19,11 @@ const AppRoutes = () => {
                         <Access />
                     )}
                 </Route>
-                <Route path="/character">
-                    {loggedIn.validate ? <Character /> : <Redirect to="/" />}
-                </Route>
                 <Route path="/characters">
                     {loggedIn.validate ? <Characters /> : <Redirect to="/" />}
+                </Route>
+                <Route path="/character/:id">
+                    {loggedIn.validate ? <Character /> : <Redirect to="/" />}
                 </Route>
             </Switch>
         </>

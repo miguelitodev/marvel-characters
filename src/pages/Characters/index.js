@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
-import Container from "../../components/Container";
+import { Link } from "react-router-dom";
 
+import Container from "../../components/Container";
 import {
     Header,
     Title,
@@ -80,7 +81,9 @@ export default function Characters() {
                                 "EEEE, d MMMM yyyy"
                             )}
                         </LastUpdate>
-                        <SeeMore>See more</SeeMore>
+                        <Link to={`/character/${character.id}`}>
+                            <SeeMore>See more</SeeMore>
+                        </Link>
                     </CardCharacter>
                 ))}
             </Main>

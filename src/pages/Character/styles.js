@@ -138,12 +138,21 @@ export const TextComics = styled.div`
 export const TitleComics = styled.h3`
     color: var(--title);
     margin-bottom: 5px;
+    display: block;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    @media (max-width: 1024px) {
+        -webkit-line-clamp: 15;
+    }
 `;
 
 export const DescriptionComics = styled.p`
     display: block;
     display: -webkit-box;
-    -webkit-line-clamp: 15;
+    -webkit-line-clamp: 14;
     -webkit-box-orient: vertical;
     overflow: hidden;
     text-overflow: ellipsis;
