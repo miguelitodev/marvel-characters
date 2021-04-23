@@ -5,6 +5,7 @@ import {
     BackgroundAccess,
     Card,
     Title,
+    Message,
     ContentInputs,
     InputPublicKey,
     InputPrivateKey,
@@ -16,6 +17,7 @@ import { verify } from "../../store/VerifierKeys/VerifierKeys.actions";
 import { save } from "../../store/PreserverKeys/PreserverKeys.actions";
 
 const Access = () => {
+    const [message, setMessage] = React.useState("");
     const [publicKey, setPublicKey] = React.useState("");
     const [privateKey, setPrivateKey] = React.useState("");
 
@@ -33,6 +35,9 @@ const Access = () => {
         } catch (error) {
             dispatch(save("", "", false));
             console.log(result);
+            setMessage(
+                "Keys invalidas ou um problema interno, tente novamente."
+            );
         }
     }
 
@@ -40,6 +45,7 @@ const Access = () => {
         <BackgroundAccess>
             <Card>
                 <Title>Dados de acesso</Title>
+                <Message>{message}</Message>
                 <ContentInputs>
                     <InputPublicKey
                         placeholder="Public key"

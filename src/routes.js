@@ -20,10 +20,10 @@ const AppRoutes = () => {
                     )}
                 </Route>
                 <Route path="/character">
-                    <Character />
+                    {loggedIn.validate ? <Character /> : <Redirect to="/" />}
                 </Route>
                 <Route path="/characters">
-                    <Characters />
+                    {loggedIn.validate ? <Characters /> : <Redirect to="/" />}
                 </Route>
             </Switch>
         </>

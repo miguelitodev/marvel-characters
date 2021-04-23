@@ -34,6 +34,9 @@ export const Card = styled.div`
 export const Title = styled.h1`
     color: var(--title);
 `;
+export const Message = styled.span`
+    color: var(--span);
+`;
 
 export const ContentInputs = styled.div`
     display: flex;
