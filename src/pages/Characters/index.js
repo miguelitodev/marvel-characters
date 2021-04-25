@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 
 import Container from "../../components/Container";
+import Pagination from "../../components/Pagination";
 import {
     Header,
     Title,
@@ -26,24 +27,29 @@ import { save } from "../../store/PreserverKeys/PreserverKeys.actions";
 
 import format from "date-fns/format";
 
+const LIMIT = 20;
+
 export default function Characters() {
     const [dataCharacters, setDataCharacters] = useState([]);
+    const [offset, setOffset] = useState(0);
+    const [total, setTotal] = useState(0);
 
     const dispatch = useDispatch();
 
     useEffect(() => {
         requestCharacters();
-    }, []);
+    }, [offset]);
 
     const keys = useSelector((state) => state.preserverKeys);
 
     async function requestCharacters() {
         try {
             const response = await request(
-                "/v1/public/characters",
+                `/v1/public/characters?offset=${offset}&limit=${LIMIT}`,
                 keys.publicKey,
                 keys.privateKey
             );
+            setTotal(response.data.data.total);
             setDataCharacters(response.data.data.results);
         } catch (error) {
             dispatch(save("", "", false));
@@ -89,15 +95,12 @@ export default function Characters() {
             </Main>
 
             <Footer>
-                <ContainerPages>
-                    <LinkPage>&laquo;</LinkPage>
-                    <LinkPage>1</LinkPage>
-                    <LinkPage>2</LinkPage>
-                    <LinkPage>3</LinkPage>
-                    <LinkPage>4</LinkPage>
-                    <LinkPage>5</LinkPage>
-                    <LinkPage>&raquo;</LinkPage>
-                </ContainerPages>
+                <Pagination
+                    limit={LIMIT}
+                    total={total}
+                    offset={offset}
+                    setOffset={setOffset}
+                />
             </Footer>
         </Container>
     );
