@@ -1,11 +1,15 @@
 import styled from "styled-components";
 
 export const ListPages = styled.ul`
-    width: 100%;
+    width: 400px;
     list-style: none;
     display: flex;
     flex-direction: row;
     justify-content: space-around;
+
+    @media (max-width: 1024px) {
+        width: 100%;
+    }
 `;
 
 export const Page = styled.li``;
