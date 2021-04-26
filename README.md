@@ -22,6 +22,17 @@ $ yarn start
 <br>
 <br>
 
+<h2>How to use? ✔</h2>
+
+<ul>
+    <li>First sign up on marvel's developer platform</li>
+    <li>Take public_key and private_key</li>
+    <li>Copy and paste into the application login page</li>
+</ul>
+
+<br>
+<br>
+
 <h2>Technologies used 📚</h2>
 
 <ul>
